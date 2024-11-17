@@ -1,0 +1,54 @@
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPA Routing</title>
+</head>
+<body>
+<nav>
+    <a href="/routing/a" data-link>Home</a>
+    <a href="/routing/b" data-link>About</a>
+    <a href="/routing/c" data-link>Contact</a>
+</nav>
+<div id="app"></div>
+
+<script>
+    // Client-side routing logic
+    const navigateTo = url => {
+        history.pushState(null, null, url);
+        router();
+    };
+
+    const router = async () => {
+        const routes = [
+            {path: "/routing/a", view: () => "<h1>A route client side</h1>"},
+            {path: "/routing/b", view: () => "<h1>B route client side</h1>"},
+            {path: "/routing/c", view: () => "<h1>C route client side</h1>"},
+        ];
+
+        // Match a route
+        const match = routes.find(route => route.path === location.pathname);
+
+        const app = document.getElementById("app");
+        app.innerHTML = match ? match.view() : "<h1>404 Not Found</h1>";
+    };
+
+    // Handle browser navigation buttons
+    window.addEventListener("popstate", router);
+
+    // Attach event listeners for links
+    document.addEventListener("DOMContentLoaded", () => {
+        document.body.addEventListener("click", e => {
+            if (e.target.matches("[data-link]")) {
+                e.preventDefault();
+                navigateTo(e.target.href);
+            }
+        });
+
+        router(); // Initial load
+    });
+</script>
+</body>
+</html>
